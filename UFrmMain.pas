@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,UConfig,ULogManager, Registry,
   ACBrDFeReport, ACBrDFeDANFeReport, ACBrNFeDANFEClass, ACBrNFeDANFeESCPOS,
-  ACBrBase, ACBrDFe, ACBrNFe, Vcl.ComCtrls, ACBrNFe.Classes, pcnConversaoNFe, ACBrDFeSSL,
+  ACBrBase, ACBrDFe, ACBrNFe, Vcl.ComCtrls, ACBrNFe.Classes, pcnConversaoNFe,
+  pcnConversao, ACBrDFeSSL,ACBrUtil,
   TypInfo,blcksock, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
   FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
   FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MySQL, FireDAC.Phys.MySQLDef,
@@ -26,6 +27,7 @@ type
     procedure CarregarNFCeConfig;
     procedure FormCreate(Sender: TObject);
     procedure FindAll(const Path: String;Attr: Integer;List: TStrings);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -127,8 +129,9 @@ begin
     L.Caption := 'ACBrNFe1.Configuracoes.Geral.FormatoAlerta';
     L.GroupID := 0;
     L.SubItems.Add(FormatoAlerta);
-    FormaEmissao := TpcnTipoEmissao
-      (frmMain.cfgManager.ReadInteger('NFeFormaEmissao'));
+    //FormaEmissao := TpcnTipoEmissao
+    //  (frmMain.cfgManager.ReadInteger('NFeFormaEmissao'));
+    FormaEmissao := teNormal;
     //L := lvwConfig.Items.Add;
     //L.Caption := 'ACBrNFe1.Configuracoes.Geral.FormaEmissao';
     //L.GroupID := 0;
@@ -167,17 +170,11 @@ begin
     L.Caption := 'ACBrNFe1.Configuracoes.WebServices.UF';
     L.GroupID := 1;
     L.SubItems.Add(UF);
-    if Self.ModoDebug then
-    begin
-      Ambiente := taHomologacao;
-      MessageBox(Self.Handle,
-        'Sistema rodando em modo debug, forçando ambiente de homologação no SEFAZ',
-        PWideChar(Self.Caption),
-        MB_OK+MB_APPLMODAL+MB_ICONWARNING);
-    end
-    else
-      Ambiente := StrToTpAmb(Ok,
-      IntToStr(frmMain.cfgManager.ReadInteger('NFeWebAmbiente') + 1));
+    Ambiente := StrToTpAmb(Ok,
+    IntToStr(frmMain.cfgManager.ReadInteger('NFeWebAmbiente') + 1));
+    if Ambiente = taHomologacao then
+      MessageBox(Self.Handle,'Utilizando ambiente de homologação',
+        PWideChar(Self.Caption),MB_OK+MB_ICONWARNING+MB_APPLMODAL);
     L := lvwConfig.Items.Add;
     L.Caption := 'ACBrNFe1.Configuracoes.WebServices.Ambiente';
     L.GroupID := 1;
@@ -341,11 +338,12 @@ begin
   try
     cfgManager := TRegistry.Create(KEY_ALL_ACCESS);
     cfgManager.RootKey := HKEY_LOCAL_MACHINE;
+    cfgManager.OpenKey('SOFTWARE\Planos\BeSTManager\', true);
     FDConnection1.Connected := False;
     if not DirectoryExists(ExtractFilePath(Application.ExeName) + 'logs') then
       CreateDir(ExtractFilePath(Application.ExeName) + 'logs');
     logMgr := TLogManager.Create(lmFile, Self.Handle);
-    logMgr.Module := 'PDV';
+    logMgr.Module := 'NFCeOffline';
     logMgr.LogDirectory := ExtractFilePath(Application.ExeName) + 'logs';
     logMgr.FallbackMode := lmMsgBox;
     logMgr.Fallback := true;
@@ -361,20 +359,12 @@ begin
       URC4.BESTMANAGER_DEFAULT_KEY);
     host := cfgManager.ReadString('db_host');
     DB := cfgManager.ReadString('db_name');
-    if cfgManager.ReadBool('SQLConnectionTrace') then
-    begin
-      FDMoniFlatFileClientLink1.FileName :=
-        cfgManager.ReadString('SQLConnectionTractFile');
-      FDMoniFlatFileClientLink1.Tracing := true;
-      logMgr.WriteLogAndNotify(ltInfo,
-        'Iniciando o sistema com Tracing habilitado, a performance do sistema será impactada negativamente',
-        'Aviso importante');
-    end;
     logMgr.WriteLog(ltNotify, 'Conectando ao servidor local');
     FDConnection1.ConnectionString :=
       Format('DriverID=MySQL;Database=%s;Password=%s;Server=%s;User_Name=%s',
       [DB, pass, host, user]);
     FDConnection1.Connected := true;
+    tblConfig.Open();
     CarregarNFCeConfig;
     tblConfig.Open();
     FileList := TStringList.Create;
@@ -392,7 +382,60 @@ begin
   end;
   end;
 end;
-procedure frmMain.FindAll(const Path: String;Attr: Integer;List: TStrings);
+procedure TfrmMain.FormShow(Sender: TObject);
+var
+  I: Integer;
+  tmp,Lote : String;
+begin
+  logMgr.WriteLog(ltNotify,'Tentando comunicação com a SEFAZ');
+  try
+    ACBrNFe1.WebServices.StatusServico.Executar;
+    logMgr.WriteLog(ltNotify,'Status do serviço');
+    logMgr.WriteLog(ltNotify,'tpAmb: '    +TpAmbToStr(ACBrNFe1.WebServices.StatusServico.tpAmb));
+    logMgr.WriteLog(ltNotify,'verAplic: ' +ACBrNFe1.WebServices.StatusServico.verAplic);
+    logMgr.WriteLog(ltNotify,'cStat: '    +IntToStr(ACBrNFe1.WebServices.StatusServico.cStat));
+    logMgr.WriteLog(ltNotify,'xMotivo: '  +ACBrNFe1.WebServices.StatusServico.xMotivo);
+    logMgr.WriteLog(ltNotify,'cUF: '      +IntToStr(ACBrNFe1.WebServices.StatusServico.cUF));
+    logMgr.WriteLog(ltNotify,'dhRecbto: ' +DateTimeToStr(ACBrNFe1.WebServices.StatusServico.dhRecbto));
+    logMgr.WriteLog(ltNotify,'tMed: '     +IntToStr(ACBrNFe1.WebServices.StatusServico.TMed));
+    logMgr.WriteLog(ltNotify,'dhRetorno: '+DateTimeToStr(ACBrNFe1.WebServices.StatusServico.dhRetorno));
+    logMgr.WriteLog(ltNotify,'xObs: '     +ACBrNFe1.WebServices.StatusServico.xObs);
+  except on E:Exception do
+  begin
+    logMgr.WriteLog(ltNotify,'Falha de comunicação com a SEFAZ, saindo');
+    PostMessage(Self.Handle, WM_QUIT, 0, 0);
+  end;
+  end;
+  logMgr.WriteLog(ltNotify,'Localizando arquivos a ser enviado em '+ExtractFilePath(Application.ExeName)+'Contingencia');
+  FindAll(ExtractFilePath(Application.ExeName)+'Contingencia\*.xml',faAnyFile,FileList);
+  if FileList.Count = 0 then
+  begin
+    logMgr.WriteLog(ltNotify,'Nenhum arquivo a ser enviado, saindo');
+    PostMessage(Self.Handle, WM_QUIT, 0, 0);
+  end;
+  for I := 0 to FileList.Count -1 do
+  begin
+    try
+      logMgr.WriteLog(ltNotify,'Enviando Arquivo '+FileList.Strings[I]);
+      memLog.Lines.Add('Enviando Arquivo '+FileList.Strings[I]);
+      Application.ProcessMessages;
+      ACBrNFe1.NotasFiscais.Clear;
+      ACBrNFe1.NotasFiscais.LoadFromFile(ExtractFilePath(Application.ExeName)+'Contingencia\'+FileList.Strings[I]);
+      tmp := FileList.Strings[I];
+      Delete(tmp,1,4);
+      Lote := Copy(tmp,1,Pos('.',tmp)-1);
+      ACBrNFe1.Enviar(Copy(Lote,1,15),false,true,false);
+      logMgr.WriteLog(ltNotify,FileList.Strings[I]+ 'enviado');
+      memLog.Lines.Add(FileList.Strings[I]+ 'enviado');
+      DeleteFile(ExtractFilePath(Application.ExeName)+'Contingencia\'+FileList.Strings[I]);
+    except on E:Exception do
+      logMgr.WriteLog(ltNotify,E.Message);
+    end;
+  end;
+  PostMessage(Self.Handle, WM_QUIT, 0, 0);
+end;
+
+procedure TfrmMain.FindAll(const Path: String;Attr: Integer;List: TStrings);
  var
     Res: TSearchRec;
     EOFound: Boolean;
@@ -402,7 +445,7 @@ procedure frmMain.FindAll(const Path: String;Attr: Integer;List: TStrings);
       exit
     else
       while not EOFound do begin
-        List.Add(Path+'\'+Res.Name) ;
+        List.Add(Res.Name) ;
         EOFound:= FindNext(Res) <> 0;
       end;
     FindClose(Res) ;

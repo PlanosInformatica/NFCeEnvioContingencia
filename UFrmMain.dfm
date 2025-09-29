@@ -12,6 +12,7 @@ object frmMain: TfrmMain
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object memLog: TMemo
@@ -21,10 +22,6 @@ object frmMain: TfrmMain
     Height = 149
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 120
-    ExplicitTop = 120
-    ExplicitWidth = 185
-    ExplicitHeight = 89
   end
   object lvwConfig: TListView
     Left = 0
@@ -45,7 +42,6 @@ object frmMain: TfrmMain
     RowSelect = True
     TabOrder = 1
     ViewStyle = vsReport
-    ExplicitTop = -6
   end
   object ACBrNFe1: TACBrNFe
     Configuracoes.Geral.SSLLib = libNone
@@ -66,7 +62,7 @@ object frmMain: TfrmMain
     MargemInferior = 8.000000000000000000
     MargemSuperior = 8.000000000000000000
     MargemEsquerda = 6.000000000000000000
-    MargemDireita = 5.100000000000000000
+    MargemDireita = 5.099999999999999000
     ExpandeLogoMarcaConfig.Altura = 0
     ExpandeLogoMarcaConfig.Esquerda = 0
     ExpandeLogoMarcaConfig.Topo = 0
@@ -85,12 +81,20 @@ object frmMain: TfrmMain
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'DriverID=MySQL')
+      'DriverID=MySQL'
+      'Database=stmanager'
+      'Password=abcd1234'
+      'Server=192.168.1.10'
+      'User_Name=remote')
+    Connected = True
+    LoginPrompt = False
     Left = 160
     Top = 160
   end
   object tblConfig: TFDTable
     Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'stmanager.global_settings'
+    TableName = 'stmanager.global_settings'
     Left = 224
     Top = 160
   end

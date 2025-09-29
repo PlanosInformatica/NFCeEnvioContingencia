@@ -1,0 +1,3 @@
+[29/09/2025 06:59:16]NFCeOffline- [Notificação] Carregando config do banco de dados local
+[29/09/2025 06:59:16]NFCeOffline- [Notificação] Conectando ao servidor local
+[29/09/2025 06:59:38]NFCeOffline- [Erro Fatal] [FireDAC][Phys][MySQL] Can't connect to MySQL server on 'localhost' (10061)
