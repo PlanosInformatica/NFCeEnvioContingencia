@@ -86,15 +86,14 @@ object frmMain: TfrmMain
       'Password=abcd1234'
       'Server=192.168.1.10'
       'User_Name=remote')
-    Connected = True
     LoginPrompt = False
     Left = 160
     Top = 160
   end
   object tblConfig: TFDTable
     Connection = FDConnection1
-    UpdateOptions.UpdateTableName = 'stmanager.global_settings'
-    TableName = 'stmanager.global_settings'
+    UpdateOptions.UpdateTableName = 'global_settings'
+    TableName = 'global_settings'
     Left = 224
     Top = 160
   end

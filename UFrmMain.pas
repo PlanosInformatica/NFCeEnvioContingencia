@@ -428,6 +428,7 @@ begin
       logMgr.WriteLog(ltNotify,FileList.Strings[I]+ 'enviado');
       memLog.Lines.Add(FileList.Strings[I]+ 'enviado');
       DeleteFile(ExtractFilePath(Application.ExeName)+'Contingencia\'+FileList.Strings[I]);
+
     except on E:Exception do
       logMgr.WriteLog(ltNotify,E.Message);
     end;
@@ -445,7 +446,8 @@ procedure TfrmMain.FindAll(const Path: String;Attr: Integer;List: TStrings);
       exit
     else
       while not EOFound do begin
-        List.Add(Res.Name) ;
+        if Pos(ExtractFileExt(Path),Res.Name) >0 then
+          List.Add(Res.Name) ;
         EOFound:= FindNext(Res) <> 0;
       end;
     FindClose(Res) ;
