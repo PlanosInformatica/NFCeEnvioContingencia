@@ -59,6 +59,11 @@
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <SanitizedProjectName>EnvioNFCeOffline</SanitizedProjectName>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_MinorVer>2</VerInfo_MinorVer>
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <VerInfo_Locale>1046</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=Planos Informática;FileDescription=$(MSBuildProjectName);FileVersion=1.2.0.0;InternalName=EnvioNFCeOffline;LegalCopyright=Planos Informática;LegalTrademarks=;OriginalFilename=EnvioNFCeOffline;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.2.0.0;Comments=Programa de envio de NFCe offline para SEFAZ</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;DBXDb2Driver;vclactnband;vclFireDAC;tethering;FireDACADSDriver;ACBr_BPeDabpeESCPOS;JvPluginSystem;ACBr_BPe;FireDACMSSQLDriver;vcltouch;JvBands;ACBr_NFe;vcldb;Intraweb;svn;JvJans;ACBr_NFeDanfeESCPOS;ACBr_PAFNFCe;ACBr_OFX;JvDotNetCtrls;vclib;FireDACDBXDriver;vclx;ACBr_SATExtratoRL;ACBr_GTIN;ACBr_Reinf;VCLRESTComponents;vclie;bindengine;JvHMI;FireDACMySQLDriver;ACBr_PAF;ACBr_SATECFVirtual;DataSnapClient;ACBr_OpenDelivery;bindcompdbx;ACBr_CTeDacteRL;ACBr_TCP;DBXSybaseASEDriver;IndyIPServer;ACBr_CTe;IndySystem;ACBr_PagFor;dsnapcon;ACBre_Social;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;ACBr_SPEDImportar;Jcl;ACBr_SPED;ACBr_MDFe;emshosting;ACBr_BoletoRL;ACBr_LFD;DBXOdbcDriver;FireDACTDataDriver;FMXTee;DbxCommonDriver;ACBr_CIOT;JvManagedThreads;xmlrtl;DataSnapNativeClient;fmxobj;JvTimeFramework;rtl;DbxClientDriver;DBXSybaseASADriver;JvSystem;JvStdCtrls;ACBr_Convenio115;appanalytics;IndyIPClient;bindcompvcl;TeeUI;JvDocking;JvPascalInterpreter;VclSmp;FireDACODBCDriver;JclVcl;DataSnapIndy10ServerTransport;ACBr_Boleto;DataSnapProviderClient;ACBr_SEF2;FireDACMongoDBDriver;JvControls;JvPrintPreview;ACBr_NFSe;DataSnapServerMidas;DBXInterBaseDriver;ACBr_NF3e;ACBr_TEFD;ACBr_SATWS;DataSnapFireDAC;svnui;JvGlobus;DBXMSSQLDriver;JvMM;ACBr_MDFeDamdfeRL;DatasnapConnectorsFreePascal;ACBr_EDI;ACBr_ONE;bindcompfmx;JvNet;DBXOracleDriver;inetdb;JvAppFrm;ACBr_Diversos;FmxTeeUI;emsedge;ACBr_LCDPR;fmx;fmxdae;JvWizards;ACBr_Ponto;dbexpress;IndyCore;JvPageComps;dsnap;DataSnapCommon;JvDB;ACBr_NFSeX;DataSnapConnectors;ACBR_DeSTDA;ACBr_SAT;JclDeveloperTools;FireDACOracleDriver;DBXMySQLDriver;JvCmp;DBXFirebirdDriver;ACBr_Sintegra;FireDACCommonODBC;ACBr_ADRCST;ACBr_GNRE;IndyIPCommon;JvCustom;vcl;ACBr_NFeDanfeRL;JvXPCtrls;ACBr_SATExtratoESCPOS;FireDACDb2Driver;ACBr_Integrador;TeeDB;JvCore;ACBr_Comum;JvCrypt;FireDACPgDriver;ibmonitor;FireDACASADriver;ACBr_GNREGuiaRL;JvDlgs;JvRuntimeDesign;ibxpress;Tee;DataSnapServer;ibxbindings;vclwinx;FireDACDSDriver;ACBr_OpenSSL;CustomIPTransport;vcldsnap;ACBr_PIXCD;bindcomp;ACBr_Serial;DBXInformixDriver;frce;ACBr_NFSeXDanfseRL;ACBr_BlocoX;dbxcds;ACBr_NFCeECFVirtual;adortl;ACBr_ANe;dsnapxml;dbrtl;inetdbxpress;IndyProtocols;JclContainers;ACBr_NF3eDANF3eESCPOS;ACBr_MTER;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
@@ -85,9 +90,9 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <DCC_ExeOutput>..\Deploy\$(Platform)\$(Config)</DCC_ExeOutput>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>..\..\..\Imagens\Planos\1479749924_history.ico</Icon_MainIcon>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.2.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <AppExecutionLevel>requireAdministrator</AppExecutionLevel>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -100,10 +105,11 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <DCC_ExeOutput>..\Deploy\$(Platform)\$(Config)</DCC_ExeOutput>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>EnvioNFCeOffline_Icon.ico</Icon_MainIcon>
         <AppExecutionLevel>requireAdministrator</AppExecutionLevel>
+        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=Planos Informática;FileDescription=$(MSBuildProjectName);FileVersion=1.2.0.2;InternalName=EnvioNFCeOffline;LegalCopyright=Planos Informática;LegalTrademarks=;OriginalFilename=EnvioNFCeOffline.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.2.0.1;Comments=Envio de NFCe Emitida offline para SEFAZ</VerInfo_Keys>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

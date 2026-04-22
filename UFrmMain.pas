@@ -342,6 +342,10 @@ begin
     FDConnection1.Connected := False;
     if not DirectoryExists(ExtractFilePath(Application.ExeName) + 'logs') then
       CreateDir(ExtractFilePath(Application.ExeName) + 'logs');
+    if not DirectoryExists(ExtractFilePath(Application.ExeName) + 'Contingencia') then
+      CreateDir(ExtractFilePath(Application.ExeName) + 'Contingencia');
+    if not DirectoryExists(ExtractFilePath(Application.ExeName) + 'ContingenciaErro') then
+      CreateDir(ExtractFilePath(Application.ExeName) + 'ContingenciaErro');
     logMgr := TLogManager.Create(lmFile, Self.Handle);
     logMgr.Module := 'NFCeOffline';
     logMgr.LogDirectory := ExtractFilePath(Application.ExeName) + 'logs';
@@ -430,7 +434,12 @@ begin
       DeleteFile(ExtractFilePath(Application.ExeName)+'Contingencia\'+FileList.Strings[I]);
 
     except on E:Exception do
-      logMgr.WriteLog(ltNotify,E.Message);
+    begin
+      logMgr.WriteLog(ltNotify,FileList.Strings[I]+':'+ E.Message);
+      MoveFile(
+        PWideChar(ExtractFilePath(Application.ExeName)+'Contingencia\'+FileList.Strings[I]),
+        PWideChar(ExtractFilePath(Application.ExeName)+'ContingenciaErro\'+FileList.Strings[I]));
+    end;
     end;
   end;
   PostMessage(Self.Handle, WM_QUIT, 0, 0);
